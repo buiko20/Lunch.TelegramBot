@@ -74,7 +74,7 @@ namespace Lunch.TelegramBot.Main.Dependency
                 .Where(t => t.IsSubclassOf(typeof(Command)))
                 .Select(t =>
                 {
-                    var getName = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), null, typeof(LunchCommand).GetMethod("GetName"));
+                    var getName = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), null, t.GetMethod("GetName"));
                     var setting = settings.CommandSettings.SingleOrDefault(
                         s => s.Name.Equals(getName(), StringComparison.OrdinalIgnoreCase));
                     return (Command) Activator.CreateInstance(t, setting);
