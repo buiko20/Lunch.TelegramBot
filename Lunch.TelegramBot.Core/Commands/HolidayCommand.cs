@@ -80,7 +80,7 @@ namespace Lunch.TelegramBot.Core.Commands
             {
                 string allPhases = WhatDayPhrases.Aggregate();
                 string help = $"{allPhases} — при обращении к боту с данной фразой будет показан список сегодняшних поводов выпить";
-                return $"{help}{Environment.NewLine}Так же каждый день в {Settings.Time:HH:mm:ss} осуществляется автооповещение о текущем дне.";
+                return $"{help}{Environment.NewLine}Так же каждый день в {Settings.Time.To24Time()} осуществляется автооповещение о текущем дне.";
             }
         }
 

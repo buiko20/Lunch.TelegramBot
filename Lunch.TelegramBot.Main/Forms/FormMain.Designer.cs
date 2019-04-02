@@ -100,7 +100,7 @@
             this.rtbLog.Location = new System.Drawing.Point(265, 13);
             this.rtbLog.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rtbLog.Name = "rtbLog";
-            this.rtbLog.Size = new System.Drawing.Size(448, 366);
+            this.rtbLog.Size = new System.Drawing.Size(752, 366);
             this.rtbLog.TabIndex = 3;
             this.rtbLog.Text = "";
             // 
@@ -115,7 +115,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(725, 392);
+            this.ClientSize = new System.Drawing.Size(1029, 392);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.rtbLog);
             this.Controls.Add(this.btnClearLog);

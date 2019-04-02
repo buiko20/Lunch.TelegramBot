@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using Lunch.TelegramBot.Common.Configuration;
+using Lunch.TelegramBot.Common.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -36,24 +37,17 @@ namespace Lunch.TelegramBot.Core.Api
 
         public bool IsExecutableNow(bool isLoggable = false)
         {
-            bool isExecutableNow = true;
             bool isExecutableToday = Settings.Enabled && !Settings.DaysToExclude.Contains(DateTime.Now.DayOfWeek);
-            if (Settings.Time.Year >= DateTime.Now.Year)
-            {
-                DateTime startDate = DateTime.Now.AddMinutes(-1);
-                DateTime endDate = DateTime.Now.AddMinutes(1);
-                DateTime dateToCheck = Settings.Time;
-                isExecutableNow = dateToCheck >= startDate && dateToCheck <= endDate;
-                if (isLoggable)
-                {
-                    Logger.Info($"{dateToCheck}>={startDate}: {dateToCheck >= startDate}; " +
-                                $"{dateToCheck}<={endDate}: {dateToCheck <= endDate}");
-                }
-            }
 
+            TimeSpan startTime = DateTime.Now.AddMinutes(-1).TimeOfDay;
+            TimeSpan endTime = DateTime.Now.AddMinutes(1).TimeOfDay;
+            TimeSpan timeToCheck = Settings.Time;
+            var isExecutableNow = timeToCheck >= startTime && timeToCheck <= endTime;
             if (isLoggable)
             {
-                Logger.Info($"{nameof(isExecutableNow)}={isExecutableNow}; {nameof(isExecutableToday)}={isExecutableToday}");
+                Logger.Info($"Command {GetName()}.   {timeToCheck.To24Time()}>={startTime.To24Time()}: {timeToCheck >= startTime};   " +
+                            $"{timeToCheck.To24Time()}<={endTime.To24Time()}: {timeToCheck <= endTime}   " +
+                            $"{nameof(isExecutableNow)}={isExecutableNow}; {nameof(isExecutableToday)}={isExecutableToday}");
             }
 
             return isExecutableNow && isExecutableToday;
