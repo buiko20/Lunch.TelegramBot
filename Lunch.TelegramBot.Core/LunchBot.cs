@@ -85,9 +85,9 @@ namespace Lunch.TelegramBot.Core
             string time = command.Settings.Time.ToString("HH:mm:ss");
             Scheduler.ScheduleDailyAction(time, () =>
             {
-                bool isExecutable = command.IsExecutableNow();
+                bool isExecutable = command.IsExecutableNow(isLoggable: true);
                 Logger.Info($"Execute daily command {command.GetName()}. {nameof(command.Settings.Enabled)}={command.Settings.Enabled} " +
-                            $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude.Aggregate()}." +
+                            $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude.Aggregate()}. " +
                             $"Will execute: {isExecutable}");
                 if (isExecutable)
                 {
