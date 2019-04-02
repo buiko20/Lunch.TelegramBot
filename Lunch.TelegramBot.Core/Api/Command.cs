@@ -34,7 +34,7 @@ namespace Lunch.TelegramBot.Core.Api
 
         public abstract Task<bool> ExecuteAsync(TelegramBotClient bot, Message message);
 
-        public bool IsExecutableNow()
+        public bool IsExecutableNow(bool isLoggable = false)
         {
             bool isExecutableNow = true;
             bool isExecutableToday = Settings.Enabled && !Settings.DaysToExclude.Contains(DateTime.Now.DayOfWeek);
@@ -44,6 +44,16 @@ namespace Lunch.TelegramBot.Core.Api
                 DateTime endDate = DateTime.Now.AddMinutes(1);
                 DateTime dateToCheck = Settings.Time;
                 isExecutableNow = dateToCheck >= startDate && dateToCheck <= endDate;
+                if (isLoggable)
+                {
+                    Logger.Info($"{dateToCheck}>={startDate}: {dateToCheck >= startDate}; " +
+                                $"{dateToCheck}<={endDate}: {dateToCheck <= endDate}");
+                }
+            }
+
+            if (isLoggable)
+            {
+                Logger.Info($"{nameof(isExecutableNow)}={isExecutableNow}; {nameof(isExecutableToday)}={isExecutableToday}");
             }
 
             return isExecutableNow && isExecutableToday;
