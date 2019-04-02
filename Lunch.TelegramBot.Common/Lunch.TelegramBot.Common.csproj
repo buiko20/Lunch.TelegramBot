@@ -53,6 +53,7 @@
     <Compile Include="Configuration\BotSettings.cs" />
     <Compile Include="Exceptions\ConfigFileException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
+    <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Models\BotInfo.cs" />
     <Compile Include="Configuration\ConfigUtils.cs" />
     <Compile Include="Utils\Scheduler.cs" />

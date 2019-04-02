@@ -9,7 +9,7 @@ namespace Lunch.TelegramBot.Common.Configuration
         {
         }
 
-        public CommandSettings(string name, bool enabled, DateTime time, int order, IEnumerable<DayOfWeek> daysToExclude)
+        public CommandSettings(string name, bool enabled, TimeSpan time, int order, IEnumerable<DayOfWeek> daysToExclude)
         {
             Name = name;
             Enabled = enabled;
@@ -22,7 +22,7 @@ namespace Lunch.TelegramBot.Common.Configuration
 
         public bool Enabled { get; set; }
 
-        public DateTime Time { get; set; }
+        public TimeSpan Time { get; set; }
 
         public IEnumerable<DayOfWeek> DaysToExclude { get; set; }
 

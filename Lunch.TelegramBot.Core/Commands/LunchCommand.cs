@@ -34,7 +34,7 @@ namespace Lunch.TelegramBot.Core.Commands
         {
         }
 
-        public override string Help => $"В рабочие дни напоминает про обед в {Settings.Time:HH:mm:ss}";
+        public override string Help => $"В рабочие дни напоминает про обед в {Settings.Time.To24Time()}";
 
         public override string GetName() => "Lunch";
 

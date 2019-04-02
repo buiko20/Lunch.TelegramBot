@@ -42,7 +42,11 @@ namespace Lunch.TelegramBot.Common.Configuration
             {
                 string name = commandsNode.Attributes.GetNamedItem("Name")?.Value;
                 bool.TryParse(commandsNode.Attributes.GetNamedItem("Enabled")?.Value, out bool enabled);
-                DateTime.TryParse(commandsNode.Attributes.GetNamedItem("Time")?.Value, out DateTime time);
+                var timeValue = commandsNode.Attributes.GetNamedItem("Time")?.Value;
+                if (TimeSpan.TryParse(timeValue, out TimeSpan time) && string.Equals(timeValue, "00:00:00", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    time = TimeSpan.Parse("00:00:01");
+                }
                 int.TryParse(commandsNode.Attributes.GetNamedItem("Order")?.Value, out int order);
                 string daysToExcludeValue = commandsNode.Attributes.GetNamedItem("DaysToExclude")?.Value;
                 var daysToExclude = new List<DayOfWeek>();

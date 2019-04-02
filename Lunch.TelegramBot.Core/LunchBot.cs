@@ -24,14 +24,14 @@ namespace Lunch.TelegramBot.Core
 
         public override async Task InitializeAsync()
         {
-           await base.InitializeAsync().ConfigureAwait(false);
-           var commandsToSchedule = Commands.Where(c => c.Settings.Time.Year >= DateTime.Now.Year).ToArray();
-           foreach (var command in commandsToSchedule)
-           {
-               if (command.Settings.Enabled)
-                   ScheduleDailyCommand(command);
-           }
-           Logger.Info($"{nameof(LunchBot)} initialized");
+            await base.InitializeAsync().ConfigureAwait(false);
+            var commandsToSchedule = Commands.Where(c => c.Settings.Time != default(TimeSpan)).ToArray();
+            foreach (var command in commandsToSchedule)
+            {
+                if (command.Settings.Enabled)
+                    ScheduleDailyCommand(command);
+            }
+            Logger.Info($"{nameof(LunchBot)} initialized");
         }
 
         protected override async void OnMessage(object sender, MessageEventArgs e)
@@ -82,11 +82,11 @@ namespace Lunch.TelegramBot.Core
                 Chat = new Chat { Id = chatId }
             };
 
-            string time = command.Settings.Time.ToString("HH:mm:ss");
+            string time = command.Settings.Time.To24Time();
             Scheduler.ScheduleDailyAction(time, () =>
             {
                 bool isExecutable = command.IsExecutableNow(isLoggable: true);
-                Logger.Info($"Execute daily command {command.GetName()}. {nameof(command.Settings.Enabled)}={command.Settings.Enabled} " +
+                Logger.Info($"Try execute daily command {command.GetName()}. {nameof(command.Settings.Enabled)}={command.Settings.Enabled} " +
                             $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude.Aggregate()}. " +
                             $"Will execute: {isExecutable}");
                 if (isExecutable)
