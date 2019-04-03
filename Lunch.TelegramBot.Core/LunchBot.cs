@@ -91,7 +91,7 @@ namespace Lunch.TelegramBot.Core
                             $"Will execute: {isExecutable}");
                 if (isExecutable)
                 {
-                    command.ExecuteAsync(Bot, message);
+                    command.ExecuteAsync(Bot, message).Wait();
                 }
             });
             Logger.Info($"{command.GetName()} command scheduled daily at {time}, exclude {command.Settings.DaysToExclude.Aggregate()}");

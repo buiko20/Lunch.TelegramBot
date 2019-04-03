@@ -13,7 +13,7 @@ namespace Lunch.TelegramBot.Common.Utils
 
         public static Timer ScheduleDailyAction(string time, Action action)
         {
-            string[] timeParts = time.Split(new[] { ':', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] timeParts = time.Split(new[] { ':', ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
             Action capturedAction = action;
             var timer = new Timer(GetWaitingTime(timeParts).TotalMilliseconds) { AutoReset = false };
             timer.Elapsed += (sender, args) =>
