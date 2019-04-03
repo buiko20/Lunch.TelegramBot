@@ -43,10 +43,11 @@ namespace Lunch.TelegramBot.Common.Configuration
                 string name = commandsNode.Attributes.GetNamedItem("Name")?.Value;
                 bool.TryParse(commandsNode.Attributes.GetNamedItem("Enabled")?.Value, out bool enabled);
                 var timeValue = commandsNode.Attributes.GetNamedItem("Time")?.Value;
-                if (TimeSpan.TryParse(timeValue, out TimeSpan time) && string.Equals(timeValue, "00:00:00", StringComparison.InvariantCultureIgnoreCase))
+                if (TimeSpan.TryParse(timeValue, out TimeSpan time) && timeValue.StartsWith("00:00:00", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    time = TimeSpan.Parse("00:00:01");
+                    time = TimeSpan.Parse("00:00:01:0000000");
                 }
+                time = new TimeSpan(0, time.Hours, time.Minutes, time.Seconds, 0);
                 int.TryParse(commandsNode.Attributes.GetNamedItem("Order")?.Value, out int order);
                 string daysToExcludeValue = commandsNode.Attributes.GetNamedItem("DaysToExclude")?.Value;
                 var daysToExclude = new List<DayOfWeek>();
