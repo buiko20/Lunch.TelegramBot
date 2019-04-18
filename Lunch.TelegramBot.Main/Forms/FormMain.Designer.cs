@@ -114,7 +114,8 @@
             // 
             // btnTryIsCommandsExecutable
             // 
-            this.btnTryIsCommandsExecutable.Location = new System.Drawing.Point(12, 348);
+            this.btnTryIsCommandsExecutable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnTryIsCommandsExecutable.Location = new System.Drawing.Point(12, 347);
             this.btnTryIsCommandsExecutable.Name = "btnTryIsCommandsExecutable";
             this.btnTryIsCommandsExecutable.Size = new System.Drawing.Size(247, 32);
             this.btnTryIsCommandsExecutable.TabIndex = 6;
