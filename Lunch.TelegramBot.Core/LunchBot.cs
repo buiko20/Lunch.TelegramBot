@@ -25,12 +25,18 @@ namespace Lunch.TelegramBot.Core
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync().ConfigureAwait(false);
-            var commandsToSchedule = Commands.Where(c => c.Settings.Time != default(TimeSpan)).ToArray();
-            foreach (var command in commandsToSchedule)
+            var commandsToSchedule = Commands.Where(c => c.Settings.Time != default(TimeSpan)).ToList();
+            for (int i = 0; i < commandsToSchedule.Count; i++)
             {
+                var command = commandsToSchedule[i];
                 if (command.Settings.Enabled)
+                {
                     ScheduleDailyCommand(command);
+                    commandsToSchedule.Remove(command);
+                    i--;
+                }
             }
+
             Logger.Info($"{nameof(LunchBot)} initialized");
         }
 
