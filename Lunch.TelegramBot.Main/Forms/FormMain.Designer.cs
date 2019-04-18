@@ -38,6 +38,7 @@
             this.btnClearLog = new System.Windows.Forms.Button();
             this.rtbLog = new System.Windows.Forms.RichTextBox();
             this.lblInfo = new System.Windows.Forms.Label();
+            this.btnTryIsCommandsExecutable = new System.Windows.Forms.Button();
             this.cmsNotifyIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -111,11 +112,23 @@
             this.lblInfo.Size = new System.Drawing.Size(247, 250);
             this.lblInfo.TabIndex = 5;
             // 
+            // btnTryIsCommandsExecutable
+            // 
+            this.btnTryIsCommandsExecutable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnTryIsCommandsExecutable.Location = new System.Drawing.Point(12, 347);
+            this.btnTryIsCommandsExecutable.Name = "btnTryIsCommandsExecutable";
+            this.btnTryIsCommandsExecutable.Size = new System.Drawing.Size(247, 32);
+            this.btnTryIsCommandsExecutable.TabIndex = 6;
+            this.btnTryIsCommandsExecutable.Text = "Is Commands Executable";
+            this.btnTryIsCommandsExecutable.UseVisualStyleBackColor = true;
+            this.btnTryIsCommandsExecutable.Click += new System.EventHandler(this.btnTryLunchCommand_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1029, 392);
+            this.Controls.Add(this.btnTryIsCommandsExecutable);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.rtbLog);
             this.Controls.Add(this.btnClearLog);
@@ -144,6 +157,7 @@
         private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.RichTextBox rtbLog;
         private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.Button btnTryIsCommandsExecutable;
     }
 }
 

@@ -24,6 +24,8 @@ namespace Lunch.TelegramBot.Main.Dependency
             RegisterForms(Kernel);
         }
 
+        public static IEnumerable<Command> Commands { get; private set; }
+
         public static void Dispose()
         {
             try
@@ -57,9 +59,9 @@ namespace Lunch.TelegramBot.Main.Dependency
 
         private static void RegisterDependency(IKernel kernel)
         {
-            var commands = GetCommands();
+            Commands = GetCommands();
             var settings = ConfigUtils.ReadBotSettings();
-            Register<Core.Api.TelegramBot>(new LunchBot(settings, commands));
+            Register<Core.Api.TelegramBot>(new LunchBot(settings, Commands));
         }
 
         private static void RegisterForms(IKernel kernel)
@@ -67,7 +69,7 @@ namespace Lunch.TelegramBot.Main.Dependency
             kernel.Bind<FormMain>().To<FormMain>();
         }
 
-        private static List<Command> GetCommands()
+        private static IEnumerable<Command> GetCommands()
         {
             var settings = ConfigUtils.ReadBotSettings();
             var commands = typeof(Command).Assembly.GetTypes()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -20,10 +21,10 @@ namespace Lunch.TelegramBot.Core.Api
         protected readonly BotSettings Settings;
         protected readonly List<Command> Commands;
 
-        protected TelegramBot(BotSettings settings, List<Command> commands)
+        protected TelegramBot(BotSettings settings, IEnumerable<Command> commands)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            Commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            Commands = commands?.ToList() ?? throw new ArgumentNullException(nameof(commands));
 
             if (string.IsNullOrWhiteSpace(settings.Key))
                 throw new ArgumentException("Telegram bot key is empty.", nameof(settings.Key));

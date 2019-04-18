@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using log4net;
 using Lunch.TelegramBot.Common.Configuration;
@@ -44,8 +45,12 @@ namespace Lunch.TelegramBot.Main.Forms
         private void closeToolStripMenuItem_Click(object sender, EventArgs e) =>
             Close();
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnTryLunchCommand_Click(object sender, EventArgs e)
         {
+            foreach (var command in CompositionRoot.Commands)
+            {
+                command.IsExecutableNow(isLoggable: true);
+            }
         }
 
         private async void btnStart_Click(object sender, EventArgs e)
@@ -77,6 +82,7 @@ Id: {botInfo.Id}";
         {
             btnClearLog.Enabled = value;
             btnStart.Enabled = value;
+            btnTryIsCommandsExecutable.Enabled = value;
             rtbLog.Enabled = value;
         }
     }

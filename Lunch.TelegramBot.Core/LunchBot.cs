@@ -17,7 +17,7 @@ namespace Lunch.TelegramBot.Core
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(LunchBot));
 
-        public LunchBot(BotSettings settings, List<Command> commands)
+        public LunchBot(BotSettings settings, IEnumerable<Command> commands)
             : base(settings, commands)
         {
         }
