@@ -22,7 +22,7 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public override async Task<bool> ExecuteAsync(TelegramBotClient bot, Message m)
         {
-            if (!IsExecutableNow() && m.Text.IndexOf("/help", StringComparison.OrdinalIgnoreCase) != -1)
+            if (m.Text.IndexOf("/help", StringComparison.OrdinalIgnoreCase) != -1)
             {
                 string help = Commands.Aggregate(string.Empty, (current, command) => current + $"{command.Help}{Environment.NewLine}{Environment.NewLine}");
                 await bot.SendTextMessageAsync(m.Chat.Id, help).ConfigureAwait(false);

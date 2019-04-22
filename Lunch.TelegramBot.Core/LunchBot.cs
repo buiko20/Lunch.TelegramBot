@@ -32,6 +32,7 @@ namespace Lunch.TelegramBot.Core
                 if (command.Settings.Enabled)
                 {
                     ScheduleDailyCommand(command);
+                    Commands.Remove(command);
                     commandsToSchedule.Remove(command);
                     i--;
                 }
@@ -64,12 +65,9 @@ namespace Lunch.TelegramBot.Core
             Logger.Info($"[{m.Chat.Id}] {m.From.FirstName} {m.From.LastName} ({m.From.Username}) отправил сообщение: {Environment.NewLine}\t{m.Text}");
             foreach (var command in Commands)
             {
-                if (command.IsExecutableNow())
-                {
-                    bool isContinue = await command.ExecuteAsync(Bot, m).ConfigureAwait(false);
-                    if (!isContinue)
-                        break;
-                }
+                bool isContinue = await command.ExecuteAsync(Bot, m).ConfigureAwait(false);
+                if (!isContinue)
+                    break;
             }
         }
 

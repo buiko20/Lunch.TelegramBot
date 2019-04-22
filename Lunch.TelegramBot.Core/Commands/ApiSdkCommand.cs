@@ -30,7 +30,7 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public override async Task<bool> ExecuteAsync(TelegramBotClient bot, Message m)
         {
-            if (!IsExecutableNow() && m.Text.IndexOf("/бот", StringComparison.OrdinalIgnoreCase) != -1)
+            if (m.Text.IndexOf("/бот", StringComparison.OrdinalIgnoreCase) != -1)
             {
                 var response = _apiAi.TextRequest(m.Text);
                 string answer = response.Result.Fulfillment.Speech;
