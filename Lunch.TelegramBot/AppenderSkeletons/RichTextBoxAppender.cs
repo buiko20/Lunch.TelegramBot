@@ -3,12 +3,16 @@ using System.Windows.Forms;
 using log4net.Appender;
 using log4net.Core;
 
-namespace Lunch.TelegramBot.Main.AppenderSkeletons
+namespace Lunch.TelegramBot.AppenderSkeletons
 {
     public class RichTextBoxAppender : AppenderSkeleton
     {
         private RichTextBox _rtb;
         private Form _form;
+
+        public RichTextBoxAppender()
+        {
+        }
 
         public string FormName { get; set; }
         public string RtbName { get; set; }
@@ -21,7 +25,7 @@ namespace Lunch.TelegramBot.Main.AppenderSkeletons
                     string.IsNullOrWhiteSpace(RtbName))
                     return;
 
-                var _form = Application.OpenForms[FormName];
+                _form = Application.OpenForms[FormName];
                 if (_form == null) return;
 
                 _rtb = _form.Controls[RtbName] as RichTextBox;

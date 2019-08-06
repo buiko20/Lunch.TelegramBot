@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A380CA57-F1E5-4868-91F0-CA345173E5D3}</ProjectGuid>
+    <ProjectGuid>{2F8CF0D5-3886-4B6A-9BD6-39535F1799DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Lunch.TelegramBot.Main</RootNamespace>
-    <AssemblyName>Lunch.TelegramBot.Main</AssemblyName>
+    <RootNamespace>Lunch.TelegramBot</RootNamespace>
+    <AssemblyName>Lunch.TelegramBot</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,10 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Main_Icon.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon>Main_Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs" Link="GlobalAssemblyInfo.cs" />
@@ -64,10 +63,6 @@
     <Compile Include="Forms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <None Include="log4net.config">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Program.cs" />
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -81,6 +76,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="BotSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -95,10 +96,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BotSettings.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Main_Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -111,11 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lunch.TelegramBot.Common\Lunch.TelegramBot.Common.csproj">
-      <Project>{1f82703d-80cc-49fb-9810-7eb43097d101}</Project>
+      <Project>{46cde084-f4ce-4e09-b51c-167efe365d95}</Project>
       <Name>Lunch.TelegramBot.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lunch.TelegramBot.Core\Lunch.TelegramBot.Core.csproj">
-      <Project>{a5f1b5c6-012f-474e-86f7-a262620ec8e9}</Project>
+      <Project>{5a24f76a-21dd-48f7-a24c-fa879d7659c2}</Project>
       <Name>Lunch.TelegramBot.Core</Name>
     </ProjectReference>
   </ItemGroup>

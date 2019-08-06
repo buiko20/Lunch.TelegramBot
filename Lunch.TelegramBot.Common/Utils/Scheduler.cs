@@ -11,7 +11,7 @@ namespace Lunch.TelegramBot.Common.Utils
         private static readonly ILog Logger = LogManager.GetLogger(typeof(Scheduler));
         private static readonly List<Timer> Timers = new List<Timer>();
 
-        public static Timer ScheduleDailyAction(string time, Action action)
+        public static void ScheduleDailyAction(string time, Action action)
         {
             string[] timeParts = time.Split(new[] { ':', ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
             Action capturedAction = action;
@@ -27,7 +27,6 @@ namespace Lunch.TelegramBot.Common.Utils
 
             timer.Start();
             Timers.Add(timer);
-            return timer;
         }
 
         public static void Dispose()

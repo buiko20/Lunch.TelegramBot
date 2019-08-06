@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
-using Lunch.TelegramBot.Common.Configuration;
-using Lunch.TelegramBot.Common.Models;
 using Lunch.TelegramBot.Common.Utils;
+using Lunch.TelegramBot.Core.Models;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 
-namespace Lunch.TelegramBot.Core.Api
+namespace Lunch.TelegramBot.Core.Bot
 {
     public abstract class TelegramBot : IDisposable
     {
@@ -19,15 +16,10 @@ namespace Lunch.TelegramBot.Core.Api
         protected int IsInitialized;
         protected readonly TelegramBotClient Bot;
         protected readonly BotSettings Settings;
-        protected readonly List<Command> Commands;
 
-        protected TelegramBot(BotSettings settings, IEnumerable<Command> commands)
+        protected TelegramBot(BotSettings settings)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            Commands = commands?.ToList() ?? throw new ArgumentNullException(nameof(commands));
-
-            if (string.IsNullOrWhiteSpace(settings.Key))
-                throw new ArgumentException("Telegram bot key is empty.", nameof(settings.Key));
 
             Bot = new TelegramBotClient(settings.Key);
             Bot.OnMessage += OnBotEvent;
@@ -90,14 +82,13 @@ namespace Lunch.TelegramBot.Core.Api
 
             try
             {
-                Scheduler.Dispose();
-                Bot.OnMessage -= OnBotEvent;
-                Bot.OnMessageEdited -= OnBotEvent;
-                Bot.StopReceiving();
-
-                foreach (var command in Commands)
+                ReleaseUnmanagedResources();
+                if (disposing)
                 {
-                    SafeDispose(command);
+                    Scheduler.Dispose();
+                    Bot.OnMessage -= OnBotEvent;
+                    Bot.OnMessageEdited -= OnBotEvent;
+                    Bot.StopReceiving();
                 }
             }
             finally
@@ -106,16 +97,9 @@ namespace Lunch.TelegramBot.Core.Api
             }
         }
 
-        private static void SafeDispose(IDisposable obj)
+        private void ReleaseUnmanagedResources()
         {
-            try
-            {
-                obj.Dispose();
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Dispose error.", e);
-            }
+            // TODO release unmanaged resources here
         }
 
         #endregion Dispose Pattern

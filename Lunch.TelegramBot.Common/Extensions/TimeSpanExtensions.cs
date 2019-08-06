@@ -34,6 +34,7 @@ namespace Lunch.TelegramBot.Common.Extensions
             }
 
             result.Add("hh\\:mm\\:ss");
+            result.Reverse();
             return result;
         }
 

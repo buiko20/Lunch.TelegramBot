@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Forms;
 using log4net;
-using Lunch.TelegramBot.Common.Configuration;
-using Lunch.TelegramBot.Main.Dependency;
-using Ninject.Parameters;
+using Lunch.TelegramBot.Dependency;
 
-namespace Lunch.TelegramBot.Main.Forms
+namespace Lunch.TelegramBot.Forms
 {
     public partial class FormMain : Form
     {
@@ -16,8 +13,6 @@ namespace Lunch.TelegramBot.Main.Forms
         {
             InitializeComponent();
         }
-
-        #region Events Handlers
 
         private void FormMain_Resize(object sender, EventArgs e)
         {
@@ -45,22 +40,14 @@ namespace Lunch.TelegramBot.Main.Forms
         private void closeToolStripMenuItem_Click(object sender, EventArgs e) =>
             Close();
 
-        private void btnTryLunchCommand_Click(object sender, EventArgs e)
-        {
-            foreach (var command in CompositionRoot.Commands)
-            {
-                command.IsExecutableNow(isLoggable: true);
-            }
-        }
-
-        private async void btnStart_Click(object sender, EventArgs e)
+        private async void BtnStart_Click(object sender, EventArgs e)
         {
             SetControlsEnable(false);
-            var bot = CompositionRoot.Resolve<Core.Api.TelegramBot>();
+            var bot = CompositionRoot.Resolve<Core.Bot.TelegramBot>();
             await bot.InitializeAsync();
 
             var botInfo = await bot.GetBotInfoAsync();
-            lblInfo.Text =
+            lblBotInfo.Text =
 $@"First Name: {botInfo.FirstName}
 Last name: {botInfo.LastName}
 Username: {botInfo.Username}
@@ -71,18 +58,9 @@ Id: {botInfo.Id}";
             btnStart.Enabled = false;
         }
 
-        private void btnClearLog_Click(object sender, EventArgs e)
-        {
-            rtbLog.Clear();
-        }
-
-        #endregion Events Handlers
-
         private void SetControlsEnable(bool value)
         {
-            btnClearLog.Enabled = value;
             btnStart.Enabled = value;
-            btnTryIsCommandsExecutable.Enabled = value;
             rtbLog.Enabled = value;
         }
     }

@@ -21,6 +21,6 @@
 //
 // You can specify all the values or you can default the Revision and Build Numbers by using the '*' as shown below:
 // [assembly: System.Reflection.AssemblyVersion("1.0.*")]
-[assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersion("1.0.0.0")]
+[assembly: System.Reflection.AssemblyVersion("2.0.0.0")]
+[assembly: System.Reflection.AssemblyFileVersion("2.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersion("2.0.0.0")]
