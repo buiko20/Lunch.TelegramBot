@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Lunch.TelegramBot.Main.Properties
+namespace Lunch.TelegramBot.Properties
 {
 
 

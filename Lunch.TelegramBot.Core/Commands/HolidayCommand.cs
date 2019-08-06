@@ -6,27 +6,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using log4net;
-using Lunch.TelegramBot.Common.Configuration;
 using Lunch.TelegramBot.Common.Extensions;
-using Lunch.TelegramBot.Core.Api;
-using Lunch.TelegramBot.Core.Helpers;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace Lunch.TelegramBot.Core.Commands
 {
-    internal class HolidayCommand : Command
+    public class HolidayCommand : Command
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(HolidayCommand));
-        private static readonly string[] WhatDayPhrases =
-        {
-            // ВНИМАНИЕ КОСТЫЛИ!
-            "праздник", // Должно быть первым, в команде дня стоит skip(1), чтобы обращение требовало только "праздник".
-            "повод нажраться",
-            "повод выпить",
-            "повод бухнуть",
-        };
 
         private readonly HttpClient _httpClient = new HttpClient();
         private bool _isDisposed;
@@ -37,52 +26,34 @@ namespace Lunch.TelegramBot.Core.Commands
         {
         }
 
-        public override string GetName() => "Holiday";
-
-        public override async Task<bool> ExecuteAsync(TelegramBotClient bot, Message m)
+        protected override async Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message m)
         {
             ThrowIfDisposed();
-            if (!IsExecutableNow()) return true;
-            if ((m.Text.IndexOf("/бот", StringComparison.OrdinalIgnoreCase) != -1 &&
-                 WhatDayPhrases.Any(s => m.Text.IndexOf(s, StringComparison.OrdinalIgnoreCase) != -1)) ||
-                (WhatDayPhrases.Skip(1).Any(s => m.Text.IndexOf(s, StringComparison.OrdinalIgnoreCase) != -1)))
+            Logger.Info($"{nameof(HolidayCommand)} execute");
+            if (string.IsNullOrWhiteSpace(_cachedData) || _lastDataGetTime.Day != DateTime.Now.Day || Debugger.IsAttached)
             {
-                Logger.Info($"{nameof(HolidayCommand)} execute");
-                if (string.IsNullOrWhiteSpace(_cachedData) || _lastDataGetTime.Day != DateTime.Now.Day || Debugger.IsAttached)
+                string html = await _httpClient.GetStringAsync(GetUrl()).ConfigureAwait(false);
+                html = html.Replace("&#160;", " ");
+                string data = $"{GetTodayDate()}{Environment.NewLine}Праздники и памятные дни";
+                data += GetData(html, "Международные").TrimEnd().Trim(' ', ',', '-', '—');
+                data += GetData(html, "Национальные").TrimEnd().Trim(' ', ',', '-', '—');
+                data += GetData(html, "Профессиональные").TrimEnd().Trim(' ', ',', '-', '—');
+                data += GetData(html, "Региональные").TrimEnd().Trim(' ', ',', '-', '—');
+
+                if (data.EndsWith("Праздники и памятные дни", StringComparison.OrdinalIgnoreCase))
                 {
-                    string html = await _httpClient.GetStringAsync(GetUrl()).ConfigureAwait(false);
-                    html = html.Replace("&#160;", " ");
-                    string data = $"{GetTodayDate()}{Environment.NewLine}Праздники и памятные дни";
-                    data += GetData(html, "Международные").TrimEnd().Trim(' ', ',', '-', '—');
-                    data += GetData(html, "Национальные").TrimEnd().Trim(' ', ',', '-', '—');
-                    data += GetData(html, "Профессиональные").TrimEnd().Trim(' ', ',', '-', '—');
-                    data += GetData(html, "Региональные").TrimEnd().Trim(' ', ',', '-', '—');
-
-                    if (data.EndsWith("Праздники и памятные дни", StringComparison.OrdinalIgnoreCase))
-                    {
-                        data += $"{Environment.NewLine}{Environment.NewLine}Есть несколько религиозных праздников.";
-                    }
-
-                    _lastDataGetTime = DateTime.Now;
-                    _cachedData = data;
+                    data += $"{Environment.NewLine}{Environment.NewLine}Есть несколько религиозных праздников.";
                 }
 
-                await bot.SendTextMessageAsync(m.Chat.Id, _cachedData, ParseMode.Markdown).ConfigureAwait(false);
-                return false;
+                _lastDataGetTime = DateTime.Now;
+                _cachedData = data;
             }
 
+            await bot.SendTextMessageAsync(m.Chat.Id, _cachedData, ParseMode.Markdown).ConfigureAwait(false);
             return true;
         }
 
-        public override string Help
-        {
-            get
-            {
-                string allPhases = WhatDayPhrases.Aggregate();
-                string help = $"{allPhases} — при обращении к боту с данной фразой будет показан список сегодняшних поводов выпить";
-                return $"{help}{Environment.NewLine}Так же каждый день в {Settings.Time.To24Time()} осуществляется автооповещение о текущем дне.";
-            }
-        }
+        public override string Help => $"Каждый день в {Settings.Time.Value.To24Time()} осуществляется автооповещение о текущем дне.";
 
         ~HolidayCommand() => Dispose(false);
 
@@ -93,6 +64,7 @@ namespace Lunch.TelegramBot.Core.Commands
             try
             {
                 _httpClient?.Dispose();
+                base.Dispose(disposing);
             }
             finally
             {
@@ -171,7 +143,7 @@ namespace Lunch.TelegramBot.Core.Commands
             string temp = id.First().ToString().ToUpper() + id.Substring(1);
             string result = $"{Environment.NewLine}{Environment.NewLine}*{temp}*{Environment.NewLine}";
             html = html.Substring(html.IndexOf($"id=\"{id}\"", StringComparison.OrdinalIgnoreCase));
-            string ul = HtmlHelper.RemoveSiteNotes(HtmlHelper.GetFirstTag(html, "ul"));
+            string ul = RemoveSiteNotes(GetFirstTag(html, "ul"));
 
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(ul);
@@ -179,7 +151,7 @@ namespace Lunch.TelegramBot.Core.Commands
             {
                 string prefix = string.Empty;
                 if (li.InnerText.IndexOf("—", StringComparison.OrdinalIgnoreCase) != -1)
-                   prefix  = li.InnerText.Substring(li.InnerText.IndexOf("—", StringComparison.OrdinalIgnoreCase));
+                    prefix = li.InnerText.Substring(li.InnerText.IndexOf("—", StringComparison.OrdinalIgnoreCase));
 
                 foreach (var a in li.SelectNodes("//a"))
                 {
@@ -204,6 +176,25 @@ namespace Lunch.TelegramBot.Core.Commands
             }
 
             return result.Trim(' ', ',', '-', '—');
+        }
+
+        private static string GetFirstTag(string html, string tag)
+        {
+            int startIndex = html.IndexOf($"<{tag}>", StringComparison.OrdinalIgnoreCase);
+            int endIndex = html.IndexOf($"</{tag}>", StringComparison.OrdinalIgnoreCase);
+            return html.Substring(startIndex, endIndex - startIndex + $"</{tag}>".Length);
+        }
+
+        private static string RemoveSiteNotes(string html)
+        {
+            while (html.IndexOf("<sup", StringComparison.OrdinalIgnoreCase) != -1)
+            {
+                int startIndex = html.IndexOf("<sup", StringComparison.OrdinalIgnoreCase);
+                int endIndex = html.IndexOf("</sup>", StringComparison.OrdinalIgnoreCase);
+                html = html.Remove(startIndex, endIndex - startIndex + "</sup>".Length);
+            }
+
+            return html;
         }
 
         private void ThrowIfDisposed()

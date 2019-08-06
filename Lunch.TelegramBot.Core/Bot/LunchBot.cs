@@ -3,39 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using log4net;
-using Lunch.TelegramBot.Common.Configuration;
 using Lunch.TelegramBot.Common.Extensions;
 using Lunch.TelegramBot.Common.Utils;
-using Lunch.TelegramBot.Core.Api;
+using Lunch.TelegramBot.Core.Commands;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Lunch.TelegramBot.Core
+namespace Lunch.TelegramBot.Core.Bot
 {
-    public class LunchBot : Api.TelegramBot
+    public class LunchBot : TelegramBot
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(LunchBot));
+        private readonly List<Command> _commands;
 
-        public LunchBot(BotSettings settings, IEnumerable<Command> commands)
-            : base(settings, commands)
+        public LunchBot(BotSettings settings, List<Command> commands) : base(settings)
         {
+            _commands = commands?.OrderBy(c => c.Settings.Order).ToList() ?? throw new ArgumentNullException(nameof(commands));
         }
 
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync().ConfigureAwait(false);
-            var commandsToSchedule = Commands.Where(c => c.Settings.Time != default(TimeSpan)).ToList();
+            var commandsToSchedule = _commands.Where(c => c.Settings.Time.HasValue).ToList();
             for (int i = 0; i < commandsToSchedule.Count; i++)
             {
                 var command = commandsToSchedule[i];
-                if (command.Settings.Enabled)
-                {
-                    ScheduleDailyCommand(command);
-                    Commands.Remove(command);
-                    commandsToSchedule.Remove(command);
-                    i--;
-                }
+                ScheduleDailyCommand(command);
+                _commands.Remove(command);
+                commandsToSchedule.Remove(command);
+                i--;
             }
 
             Logger.Info($"{nameof(LunchBot)} initialized");
@@ -44,8 +41,8 @@ namespace Lunch.TelegramBot.Core
         protected override async void OnMessage(object sender, MessageEventArgs e)
         {
             var m = e?.Message;
-            if (object.ReferenceEquals(m, null))
-                return;
+            if (m is null) return;
+
             switch (m.Type)
             {
                 case MessageType.Text:
@@ -60,45 +57,79 @@ namespace Lunch.TelegramBot.Core
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                foreach (Command command in _commands)
+                {
+                    SafeDispose(command);
+                }
+            }
+
+            base.Dispose(disposing);
+            IsDisposed = true;
+        }
+
         private async Task OnTextMessageAsync(Message m)
         {
             Logger.Info($"[{m.Chat.Id}] {m.From.FirstName} {m.From.LastName} ({m.From.Username}) отправил сообщение: {Environment.NewLine}\t{m.Text}");
-            foreach (var command in Commands)
+            foreach (Command command in _commands)
             {
                 bool isContinue = await command.ExecuteAsync(Bot, m).ConfigureAwait(false);
-                if (!isContinue)
-                    break;
+                if (!isContinue) break;
             }
         }
 
         private void ScheduleDailyCommand(Command command)
         {
-            const int lunchChatId = -357076564, me = 569665095;
-            int chatId;
+            long lunchChatId = Settings.ChatId, me = 569665095L;
+            long chatId;
 #if DEBUG
             chatId = me;
 #else
             chatId = lunchChatId;
 #endif
+
             var message = new Message
             {
                 Text = $"/бот, {command.Help}",
                 Chat = new Chat { Id = chatId }
             };
 
-            string time = command.Settings.Time.To24Time();
+            string time = command.Settings.Time.Value.To24Time();
             Scheduler.ScheduleDailyAction(time, () =>
             {
-                bool isExecutable = command.IsExecutableNow(isLoggable: true);
-                Logger.Info($"Try execute daily command {command.GetName()}. {nameof(command.Settings.Enabled)}={command.Settings.Enabled} " +
-                            $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude.Aggregate()}. " +
+                bool isExecutable = command.IsExecutableNow();
+                Logger.Info($"Try execute daily command {command.GetType().Name}." +
+                            $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude?.Aggregate() ?? "null"}. " +
                             $"Will execute: {isExecutable}");
                 if (isExecutable)
                 {
                     command.ExecuteAsync(Bot, message).Wait();
                 }
             });
-            Logger.Info($"{command.GetName()} command scheduled daily at {time}, exclude {command.Settings.DaysToExclude.Aggregate()}");
+            Logger.Info($"{command.GetType().Name} command scheduled daily at {time}, exclude {command.Settings.DaysToExclude?.Aggregate() ?? "null"}");
+        }
+
+        private static void SafeDispose(IDisposable obj)
+        {
+            try
+            {
+                obj.Dispose();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Dispose error.", e);
+            }
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            // TODO release unmanaged resources here
         }
     }
 }
