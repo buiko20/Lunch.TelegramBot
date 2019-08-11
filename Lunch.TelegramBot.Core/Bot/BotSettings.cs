@@ -9,8 +9,6 @@ namespace Lunch.TelegramBot.Core.Bot
 
         public string Key { get; set; }
 
-        public string ApiSdkToken { get; set; }
-
         public long ChatId { get; set; }
 
         public IList<CommandSettings> CommandsSettings { get; set; } = new List<CommandSettings>();

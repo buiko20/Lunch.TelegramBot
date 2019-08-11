@@ -26,7 +26,7 @@ namespace Lunch.TelegramBot.Core.Commands
         {
         }
 
-        protected override async Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message m)
+        protected override async Task<bool> ExecuteInternalAsync(ITelegramBotClient bot, Message m)
         {
             ThrowIfDisposed();
             Logger.Info($"{nameof(HolidayCommand)} execute");

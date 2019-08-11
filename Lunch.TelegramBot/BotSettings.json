@@ -2,7 +2,8 @@
   "initializationDelay": 3000,
   //"key": "787502719:AAEukY_TR1dICM0wDdOCiBtP69AGTg05fZo", // t.me/VRTF_IMGR_Bot
   "key": "884515953:AAE8R7NE971AQ0KAnUpDEJH2K-zSPwMkzwo", // t.me/TempBot4222_Bot for testing
-  "chatId": "-357076564", // Lunch chat id
+  //"chatId": "-357076564", // Lunch chat id
+  "chatId": "569665095",
   "commandsSettings": [
     {
       "name": "Lunch.TelegramBot.Core.Commands.BotHelpCommand, Lunch.TelegramBot.Core",
@@ -48,7 +49,7 @@
     {
       "name": "Lunch.TelegramBot.Core.Commands.ApiSdkCommand, Lunch.TelegramBot.Core",
       "order": 4,
-      "token": "440c227eeaa5460e8fdde00fe5bbf31e", // ApiSDK
+      "data": "440c227eeaa5460e8fdde00fe5bbf31e", // ApiSDK
       "triggerWords": [ "/бот", "/bot" ]
     }
   ]

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunch.TelegramBot.Common", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunch.TelegramBot.Core", "Lunch.TelegramBot.Core\Lunch.TelegramBot.Core.csproj", "{5A24F76A-21DD-48F7-A24C-FA879D7659C2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E082252A-33CD-4570-A4FD-906868E63C5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunch.TelegramBot.Core.Tests", "Lunch.TelegramBot.Core.Tests\Lunch.TelegramBot.Core.Tests.csproj", "{42BE2958-5C26-4A23-882F-903CE0A4E384}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{5A24F76A-21DD-48F7-A24C-FA879D7659C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A24F76A-21DD-48F7-A24C-FA879D7659C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A24F76A-21DD-48F7-A24C-FA879D7659C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42BE2958-5C26-4A23-882F-903CE0A4E384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42BE2958-5C26-4A23-882F-903CE0A4E384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42BE2958-5C26-4A23-882F-903CE0A4E384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42BE2958-5C26-4A23-882F-903CE0A4E384}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{42BE2958-5C26-4A23-882F-903CE0A4E384} = {E082252A-33CD-4570-A4FD-906868E63C5C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80E02393-003F-4594-B686-FFFD0DBF1182}

@@ -18,7 +18,7 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public override string Help => @"/help - описание команд бота";
 
-        protected override async Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message m)
+        protected override async Task<bool> ExecuteInternalAsync(ITelegramBotClient bot, Message m)
         {
             if (IsMessageForCommand(m))
             {
