@@ -44,8 +44,8 @@ namespace Lunch.TelegramBot.Core.Commands
             Logger.Debug($"Settings.Time.HasValue={Settings.Time.HasValue}");
             if (!Settings.Time.HasValue) return true;
 
-            TimeSpan startTime = DateTime.Now.AddSeconds(-1).TimeOfDay;
-            TimeSpan endTime = DateTime.Now.AddSeconds(1).TimeOfDay;
+            TimeSpan startTime = DateTime.Now.AddSeconds(-3).TimeOfDay;
+            TimeSpan endTime = DateTime.Now.AddSeconds(3).TimeOfDay;
             TimeSpan timeToCheck = Settings.Time.Value;
             bool isExecutableNow = timeToCheck >= startTime && timeToCheck <= endTime;
 
