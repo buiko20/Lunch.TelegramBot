@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ApiAiSDK;
+using ApiAiSDK.Model;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -11,13 +12,13 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public ApiSdkCommand(CommandSettings settings) : base(settings)
         {
-            var aiConfiguration = new AIConfiguration(settings.Token, SupportedLanguage.Russian);
+            var aiConfiguration = new AIConfiguration(settings.Data.ToString(), SupportedLanguage.Russian);
             _apiAi = new ApiAi(aiConfiguration);
         }
 
         public override string Help => @"/бот — обращение к боту";
 
-        protected override async Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message m)
+        protected override async Task<bool> ExecuteInternalAsync(ITelegramBotClient bot, Message m)
         {
             if (IsMessageForCommand(m))
             {

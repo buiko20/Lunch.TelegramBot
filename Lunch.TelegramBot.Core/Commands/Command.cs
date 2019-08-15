@@ -30,7 +30,7 @@ namespace Lunch.TelegramBot.Core.Commands
         /// <param name="bot">telegram bot</param>
         /// <param name="message">message from telegram</param>
         /// <returns>True if the execution thread should continue to execute commands, False otherwise.</returns>
-        public Task<bool> ExecuteAsync(TelegramBotClient bot, Message message)
+        public Task<bool> ExecuteAsync(ITelegramBotClient bot, Message message)
         {
             return IsExecutableNow() ? ExecuteInternalAsync(bot, message) : Task.FromResult(true);
         }
@@ -38,19 +38,24 @@ namespace Lunch.TelegramBot.Core.Commands
         public bool IsExecutableNow()
         {
             bool isExecutableToday = !Settings.DaysToExclude?.Contains(DateTime.Now.DayOfWeek) ?? true;
+            Logger.Debug($"{nameof(isExecutableToday)}={isExecutableToday}");
             if (!isExecutableToday) return false;
 
+            Logger.Debug($"Settings.Time.HasValue={Settings.Time.HasValue}");
             if (!Settings.Time.HasValue) return true;
 
-            TimeSpan startTime = DateTime.Now.AddSeconds(-1).TimeOfDay;
-            TimeSpan endTime = DateTime.Now.AddSeconds(1).TimeOfDay;
+            TimeSpan startTime = DateTime.Now.AddSeconds(-3).TimeOfDay;
+            TimeSpan endTime = DateTime.Now.AddSeconds(3).TimeOfDay;
             TimeSpan timeToCheck = Settings.Time.Value;
             bool isExecutableNow = timeToCheck >= startTime && timeToCheck <= endTime;
+
+            Logger.Debug($"startTime={startTime}; endTime={endTime}; timeToCheck={timeToCheck}");
+            Logger.Debug($"isExecutableNow={isExecutableNow}; timeToCheck >= startTime:{timeToCheck >= startTime}; timeToCheck <= endTime:{timeToCheck <= endTime}");
 
             return isExecutableNow;
         }
 
-        protected abstract Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message message);
+        protected abstract Task<bool> ExecuteInternalAsync(ITelegramBotClient bot, Message message);
 
         protected bool IsMessageForCommand(Message message)
         {

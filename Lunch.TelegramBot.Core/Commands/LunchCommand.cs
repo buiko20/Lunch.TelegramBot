@@ -19,7 +19,7 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public override string Help => $"В рабочие дни напоминает про обед в {Settings.Time.Value.To24Time()}";
 
-        protected override async Task<bool> ExecuteInternalAsync(TelegramBotClient bot, Message m)
+        protected override async Task<bool> ExecuteInternalAsync(ITelegramBotClient bot, Message m)
         {
             Logger.Info($"{nameof(LunchCommand)} execute");
             await bot.SendTextMessageAsync(m.Chat.Id, _lunchPhrases.GetRandom()).ConfigureAwait(false);

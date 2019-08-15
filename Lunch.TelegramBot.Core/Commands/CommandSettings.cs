@@ -14,8 +14,6 @@ namespace Lunch.TelegramBot.Core.Commands
 
         public string[] TriggerWords { get; set; }
 
-        public string Token { get; set; }
-
         public object Data { get; set; }
     }
 }

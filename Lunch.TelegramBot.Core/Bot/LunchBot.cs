@@ -86,18 +86,10 @@ namespace Lunch.TelegramBot.Core.Bot
 
         private void ScheduleDailyCommand(Command command)
         {
-            long lunchChatId = Settings.ChatId, me = 569665095L;
-            long chatId;
-#if DEBUG
-            chatId = me;
-#else
-            chatId = lunchChatId;
-#endif
-
             var message = new Message
             {
                 Text = $"/бот, {command.Help}",
-                Chat = new Chat { Id = chatId }
+                Chat = new Chat { Id = Settings.ChatId }
             };
 
             string time = command.Settings.Time.Value.To24Time();
@@ -105,7 +97,7 @@ namespace Lunch.TelegramBot.Core.Bot
             {
                 bool isExecutable = command.IsExecutableNow();
                 Logger.Info($"Try execute daily command {command.GetType().Name}." +
-                            $"{nameof(command.Settings.DaysToExclude)}={command.Settings.DaysToExclude?.Aggregate() ?? "null"}. " +
+                            $"{nameof(command.Settings.DaysToExclude)}=[{command.Settings.DaysToExclude?.Aggregate() ?? "null"}]. " +
                             $"Will execute: {isExecutable}");
                 if (isExecutable)
                 {

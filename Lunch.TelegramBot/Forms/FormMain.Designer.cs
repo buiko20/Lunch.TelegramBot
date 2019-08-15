@@ -78,7 +78,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbLog.Location = new System.Drawing.Point(255, 0);
             this.rtbLog.Name = "rtbLog";
-            this.rtbLog.Size = new System.Drawing.Size(508, 451);
+            this.rtbLog.Size = new System.Drawing.Size(559, 451);
             this.rtbLog.TabIndex = 1;
             this.rtbLog.Text = "";
             // 
@@ -114,7 +114,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(763, 450);
+            this.ClientSize = new System.Drawing.Size(814, 450);
             this.Controls.Add(this.gbBotInfo);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.rtbLog);
